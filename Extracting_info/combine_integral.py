@@ -6,41 +6,38 @@ from matplotlib import pyplot as plt
 img=cv.imread("Extracting_info/morphological.jpg",0)
 ret,img1=cv.threshold(img,80,255,cv.THRESH_BINARY)
 
-#to get the height and width of image
+#return the image height and width
 (h,w)=img1.shape
 
-#初始化一个跟图像高一样长度的数组，用于记录每一行的黑点个数
+# initialize a list with length equivalent to the image height, to record the number of dark pixels at every column
 a=[0 for z in range(0,h)]
 
-for i in range(0,h):          #遍历每一行
-    for j in range(0,w):      #遍历每一列
-        if img1[i,j]==0:      #判断该点是否为黑点，0代表黑点
-            a[i]+=1           #该行的计数器加一
-            img1[i,j]=255     #将其改为白点，即等于255
-for i in range(0,h):          #遍历每一行
-    for j in range(0,a[i]):   #从该行应该变黑的最左边的点开始向最右边的点设置黑点
-        img1[i,j]=0           #设置黑点
+for i in range(0,h):          # traverse each row
+    for j in range(0,w):      # traverse each column
+        if img1[i,j]==0:      # decide whether it is a dark pixel, 0 meaning it is a dark pixel
+            a[i]+=1           # increment the counter for that column
+            img1[i,j]=255     # transform it into a white pixel after recording (by changing it into 255)
+for i in range(0,h):          # traverse every row
+    for j in range(0,a[i]):   
+        img1[i,j]=0           # transform it into a dark pixel
 
-#垂直投影
-import numpy as np
-import cv2 as cv
-img=cv.imread("Extracting_info/morphological.jpg",0)
+#Vertical Integral Projection
 ret,img2=cv.threshold(img,80,255,cv.THRESH_BINARY)
 
-#返回图像的高和宽
+#return the image height and width
 (h,w)=img2.shape
 
-#初始化一个跟图像宽一样长度的数组，用于记录每一列的黑点个数
+# initialize a list with length equivalent to the image width, to record the number of dark pixels at every column
 a =[0 for z in range(0,w)]
 
-for i in range(0,w):           #遍历每一列
-    for j in range(0,h):       #遍历每一行
-        if img2[j,i]==0:       #判断该点是否为黑点，0代表是黑点
-            a[i]+=1            #该列的计数器加1
-            img2[j,i]=255      #记录完后将其变为白色，即等于255
-for i in range(0,w):           #遍历每一列
-    for j in range(h-a[i],h):  #从该列应该变黑的最顶部的开始向最底部设为黑点
-        img2[j,i]=0            #设为黑点
+for i in range(0,w):           # traverse each column
+    for j in range(0,h):       # traverse each row
+        if img2[j,i]==0:       # decide whether it is a dark pixel, 0 meaning it is a dark pixel
+            a[i]+=1            # increment the counter for that column
+            img2[j,i]=255      # transform it into a white pixel after recording (by changing it into 255)
+for i in range(0,w):           # traverse every column
+    for j in range(h-a[i],h):  
+        img2[j,i]=0            # transform it into a dark pixel
 
 gridsize = (4, 4)
 fig = plt.figure(figsize=(12, 6))

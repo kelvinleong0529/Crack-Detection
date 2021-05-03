@@ -1,23 +1,23 @@
-#水平投影
+#Horizontal Integral Projection
 import numpy as np
 import cv2 as cv
 img=cv.imread("Extracting_info/morphological.jpg",0)
 ret,img1=cv.threshold(img,80,255,cv.THRESH_BINARY)
 
-#返回图像的高和宽
+#return the image height and width
 (h,w)=img1.shape
 
-#初始化一个跟图像高一样长度的数组，用于记录每一行的黑点个数
+# initialize a list with length equivalent to the image height, to record the number of dark pixels at every column
 a=[0 for z in range(0,h)]
 
-for i in range(0,h):          #遍历每一行
-    for j in range(0,w):      #遍历每一列
-        if img1[i,j]==0:      #判断该点是否为黑点，0代表黑点
-            a[i]+=1           #该行的计数器加一
-            img1[i,j]=255     #将其改为白点，即等于255
-for i in range(0,h):          #遍历每一行
-    for j in range(0,a[i]):   #从该行应该变黑的最左边的点开始向最右边的点设置黑点
-        img1[i,j]=0           #设置黑点
+for i in range(0,h):          # traverse each row
+    for j in range(0,w):      # traverse each column
+        if img1[i,j]==0:      # decide whether it is a dark pixel, 0 meaning it is a dark pixel
+            a[i]+=1           # increment the counter for that column
+            img1[i,j]=255     # transform it into a white pixel after recording (by changing it into 255)
+for i in range(0,h):          # traverse every column
+    for j in range(0,a[i]):   
+        img1[i,j]=0           # transform it into a dark pixel
 img1 = cv.resize(img1,(1000,500))
 cv.imshow("img",img1)
 cv.imwrite('Extracting_info/horizontal_integral.jpg', img1)
