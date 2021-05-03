@@ -18,6 +18,8 @@ for i in range(0,h):          #遍历每一行
 for i in range(0,h):          #遍历每一行
     for j in range(0,a[i]):   #从该行应该变黑的最左边的点开始向最右边的点设置黑点
         img1[i,j]=0           #设置黑点
+img1 = cv.resize(img1,(1000,500))
 cv.imshow("img",img1)
+cv.imwrite('Extracting_info/horizontal_integral.jpg', img1)
 cv.waitKey(0)
 cv.destroyAllWindows()

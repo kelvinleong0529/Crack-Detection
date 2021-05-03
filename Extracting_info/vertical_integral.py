@@ -18,6 +18,8 @@ for i in range(0,w):           #遍历每一列
 for i in range(0,w):           #遍历每一列
     for j in range(h-a[i],h):  #从该列应该变黑的最顶部的开始向最底部设为黑点
         img1[j,i]=0            #设为黑点
+img1 = cv.resize(img1,(1000,500))
 cv.imshow("img",img1)
 cv.waitKey(0)
+cv.imwrite('Extracting_info/vertical_integral.jpg', img1)
 cv.destroyAllWindows()
