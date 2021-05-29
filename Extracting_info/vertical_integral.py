@@ -10,8 +10,8 @@ ret,img1=cv.threshold(img,80,255,cv.THRESH_BINARY)
 # initialize a list with length equivalent to the image width, to record the number of dark pixels at every column
 a =[0 for z in range(0,w)]
 
-for i in range(0,w):           #traverse each column
-    for j in range(0,h):       #traverse each row
+for i in range(0,w):           # traverse each column
+    for j in range(0,h):       # traverse each row
         if img1[j,i]==0:       # decide whether it is a dark pixel, 0 meaning it is a dark pixel
             a[i]+=1            # increment the counter for that column
             img1[j,i]=255      # transform it into a white pixel after recording (by changing it into 255)

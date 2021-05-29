@@ -3,7 +3,7 @@ import numpy as np
 import cv2 as cv
 from matplotlib import pyplot as plt
 
-img=cv.imread("Extracting_info/morphological.jpg",0)
+img=cv.imread("Extracting_info/largest_contour.jpg",0)
 ret,img1=cv.threshold(img,80,255,cv.THRESH_BINARY)
 
 #return the image height and width

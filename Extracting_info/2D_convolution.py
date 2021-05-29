@@ -2,8 +2,8 @@ import numpy as np
 import cv2 as cv
 from matplotlib import pyplot as plt
 
-img = cv.imread('Extracting_info/new_modify.png')
-kernel = np.ones((3,3),np.float32)/25
+img = cv.imread('Extracting_info/cracks.jpg')
+kernel = np.ones((5,5),np.float32)/25
 dst = cv.filter2D(img,-1,kernel)
 plt.subplot(121),plt.imshow(img),plt.title('Original')
 plt.xticks([]), plt.yticks([])

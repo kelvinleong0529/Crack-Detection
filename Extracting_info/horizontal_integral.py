@@ -15,7 +15,7 @@ for i in range(0,h):          # traverse each row
         if img1[i,j]==0:      # decide whether it is a dark pixel, 0 meaning it is a dark pixel
             a[i]+=1           # increment the counter for that column
             img1[i,j]=255     # transform it into a white pixel after recording (by changing it into 255)
-for i in range(0,h):          # traverse every column
+for i in range(0,h):          # traverse every row
     for j in range(0,a[i]):   
         img1[i,j]=0           # transform it into a dark pixel
 img1 = cv.resize(img1,(1000,500))
