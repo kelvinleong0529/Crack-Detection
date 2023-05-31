@@ -1,25 +1,44 @@
 #Horizontal Integral Projection
 import numpy as np
 import cv2 as cv
-img=cv.imread("Extracting_info/morphological.jpg",0)
-ret,img1=cv.threshold(img,80,255,cv.THRESH_BINARY)
 
-#return the image height and width
-(h,w)=img1.shape
+def preprocess_image(image_path, threshold_value):
+    img = cv.imread(image_path, 0)
+    _, img_binary = cv.threshold(img, threshold_value, 255, cv.THRESH_BINARY)
+    return img_binary
 
-# initialize a list with length equivalent to the image height, to record the number of dark pixels at every column
-a=[0 for z in range(0,h)]
+def calculate_column_dark_pixel_counts(img_binary):
+    h, w = img_binary.shape[:2]
+    column_dark_pixel_counts = [0] * h
 
-for i in range(0,h):          # traverse each row
-    for j in range(0,w):      # traverse each column
-        if img1[i,j]==0:      # decide whether it is a dark pixel, 0 meaning it is a dark pixel
-            a[i]+=1           # increment the counter for that column
-            img1[i,j]=255     # transform it into a white pixel after recording (by changing it into 255)
-for i in range(0,h):          # traverse every row
-    for j in range(0,a[i]):   
-        img1[i,j]=0           # transform it into a dark pixel
-img1 = cv.resize(img1,(1000,500))
-cv.imshow("img",img1)
-cv.imwrite('Extracting_info/horizontal_integral.jpg', img1)
-cv.waitKey(0)
-cv.destroyAllWindows()
+    for i in range(h):
+        for j in range(w):
+            if img_binary[i, j] == 0:
+                column_dark_pixel_counts[i] += 1
+                img_binary[i, j] = 255
+
+    for i in range(h):
+        for j in range(column_dark_pixel_counts[i]):
+            img_binary[i, j] = 0
+
+    return img_binary
+
+def show_image(image):
+    resized_image = cv.resize(image, (1000, 500))
+    cv.imshow("img", resized_image)
+    cv.imwrite('Extracting_info/horizontal_integral.jpg', resized_image)
+    cv.waitKey(0)
+    cv.destroyAllWindows()
+
+def main():
+    image_path = 'Extracting_info/morphological.jpg'
+    threshold_value = 80
+
+    img = cv.imread(image_path, cv.IMREAD_GRAYSCALE)
+    img_binary = preprocess_image(image_path, threshold_value)
+    img_binary = calculate_column_dark_pixel_counts(img_binary)
+
+    show_image(img_binary)
+
+if __name__ == '__main__':
+    main()
