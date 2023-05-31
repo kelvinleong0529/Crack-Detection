@@ -1,58 +1,80 @@
 #Horizontal integral projection
 import numpy as np
 import cv2 as cv
-from matplotlib import pyplot as plt
+import matplotlib.pyplot as plt
 
-img=cv.imread("Extracting_info/largest_contour.jpg",0)
-ret,img1=cv.threshold(img,80,255,cv.THRESH_BINARY)
+def preprocess_image(image_path, threshold_value):
+    img = cv.imread(image_path, 0)
+    _, img_binary = cv.threshold(img, threshold_value, 255, cv.THRESH_BINARY)
+    return img_binary
 
-#return the image height and width
-(h,w)=img1.shape
+def process_horizontal_projection(img_binary):
+    h, w = img_binary.shape[:2]
+    column_dark_pixel_counts = [0] * h
 
-# initialize a list with length equivalent to the image height, to record the number of dark pixels at every column
-a=[0 for z in range(0,h)]
+    for i in range(h):
+        for j in range(w):
+            if img_binary[i, j] == 0:
+                column_dark_pixel_counts[i] += 1
+                img_binary[i, j] = 255
 
-for i in range(0,h):          # traverse each row
-    for j in range(0,w):      # traverse each column
-        if img1[i,j]==0:      # decide whether it is a dark pixel, 0 meaning it is a dark pixel
-            a[i]+=1           # increment the counter for that column
-            img1[i,j]=255     # transform it into a white pixel after recording (by changing it into 255)
-for i in range(0,h):          # traverse every row
-    for j in range(0,a[i]):   
-        img1[i,j]=0           # transform it into a dark pixel
+    for i in range(h):
+        for j in range(column_dark_pixel_counts[i]):
+            img_binary[i, j] = 0
 
-#Vertical Integral Projection
-ret,img2=cv.threshold(img,80,255,cv.THRESH_BINARY)
+    return img_binary
 
-#return the image height and width
-(h,w)=img2.shape
+def process_vertical_projection(img_binary):
+    h, w = img_binary.shape[:2]
+    row_dark_pixel_counts = [0] * w
 
-# initialize a list with length equivalent to the image width, to record the number of dark pixels at every column
-a =[0 for z in range(0,w)]
+    for i in range(w):
+        for j in range(h):
+            if img_binary[j, i] == 0:
+                row_dark_pixel_counts[i] += 1
+                img_binary[j, i] = 255
 
-for i in range(0,w):           # traverse each column
-    for j in range(0,h):       # traverse each row
-        if img2[j,i]==0:       # decide whether it is a dark pixel, 0 meaning it is a dark pixel
-            a[i]+=1            # increment the counter for that column
-            img2[j,i]=255      # transform it into a white pixel after recording (by changing it into 255)
-for i in range(0,w):           # traverse every column
-    for j in range(h-a[i],h):  
-        img2[j,i]=0            # transform it into a dark pixel
+    for i in range(w):
+        for j in range(h - row_dark_pixel_counts[i], h):
+            img_binary[j, i] = 0
 
-gridsize = (4, 4)
-fig = plt.figure(figsize=(12, 6))
-ax1 = plt.subplot2grid(gridsize, (0, 1), colspan=3, rowspan=3) 
-ax1.imshow(img,cmap = 'gray')
-plt.xticks([])
-plt.yticks([])
-ax2 = plt.subplot2grid(gridsize, (0, 0), rowspan=3)
-img1 = cv.resize(img1,(500,1300))
-ax2.imshow(img1,cmap = 'gray')
-plt.xticks([])
-plt.yticks([])
-ax3 = plt.subplot2grid(gridsize, (3, 1), colspan=3)
-img2 = cv.resize(img2,(3200,500))
-ax3.imshow(img2,cmap = 'gray')
-plt.xticks([])
-plt.yticks([])
-plt.show()
+    return img_binary
+
+def show_images(img, img1, img2):
+    gridsize = (4, 4)
+    fig = plt.figure(figsize=(12, 6))
+
+    ax1 = plt.subplot2grid(gridsize, (0, 1), colspan=3, rowspan=3)
+    ax1.imshow(img, cmap='gray')
+    plt.xticks([])
+    plt.yticks([])
+
+    ax2 = plt.subplot2grid(gridsize, (0, 0), rowspan=3)
+    img1 = cv.resize(img1, (500, 1300))
+    ax2.imshow(img1, cmap='gray')
+    plt.xticks([])
+    plt.yticks([])
+
+    ax3 = plt.subplot2grid(gridsize, (3, 1), colspan=3)
+    img2 = cv.resize(img2, (3200, 500))
+    ax3.imshow(img2, cmap='gray')
+    plt.xticks([])
+    plt.yticks([])
+
+    plt.show()
+
+def main():
+    image_path = 'Extracting_info/largest_contour.jpg'
+    threshold_value = 80
+
+    img = cv.imread(image_path, cv.IMREAD_GRAYSCALE)
+    img1 = preprocess_image(image_path, threshold_value)
+    img2 = preprocess_image(image_path, threshold_value)
+
+    img1 = process_horizontal_projection(img1)
+    img2 = process_vertical_projection(img2)
+
+    show_images(img, img1, img2)
+
+if __name__ == '__main__':
+    main()
